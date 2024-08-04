@@ -1,6 +1,5 @@
-import logo from "./logo.svg";
+import React, { useState } from "react";
 import "./App.css";
-import { useState } from "react";
 
 const api = {
   key: "c8f91f80aca7466e25f6e965296a3d93",
@@ -19,14 +18,30 @@ function App() {
       });
   };
 
-  return (
-    <div className="App">
-      <header className="App-header">
-        {/* header */}
-        <h1>Weather App</h1>
+  const getBackgroundClass = () => {
+    if (!weather.weather) return "default";
+    const mainWeather = weather.weather[0].main.toLowerCase();
+    switch (mainWeather) {
+      case "clouds":
+        return "cloudy";
+      case "rain":
+        return "rainy";
+      case "snow":
+        return "snowy";
+      case "clear":
+        return "clear";
+      case "thunderstorm":
+        return "stormy";
+      default:
+        return "default";
+    }
+  };
 
-        {/* Search Box */}
-        <div>
+  return (
+    <div className={`App ${getBackgroundClass()}`}>
+      <header className="App-header">
+        <h1>Weather App</h1>
+        <div className="search-box">
           <input
             type="text"
             placeholder="Enter your city/Town"
@@ -34,18 +49,20 @@ function App() {
           />
           <button onClick={searchPressed}>Search</button>
         </div>
-
         {typeof weather.main !== "undefined" ? (
-          <div>
-            {/* Location */}
-            <p>{weather.name}</p>
-
-            {/* Temperature */}
-            <p>{weather.main.temp}</p>
-
-            {/* Condition */}
-            <p>{weather.weather[0].main}</p>
-            <p>{weather.weather[0].description}</p>
+          <div className="weather-info">
+            <p>
+              <strong>Location:</strong> {weather.name}
+            </p>
+            <p>
+              <strong>Temperature:</strong> {weather.main.temp}°C
+            </p>
+            <p>
+              <strong>Condition:</strong> {weather.weather[0].main}
+            </p>
+            <p>
+              <strong>Description:</strong> {weather.weather[0].description}
+            </p>
           </div>
         ) : (
           ""
